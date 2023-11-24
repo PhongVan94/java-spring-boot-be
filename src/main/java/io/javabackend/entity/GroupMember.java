@@ -1,23 +1,21 @@
 package io.javabackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
 
 @Entity
-@Table(name="\"Group\"")
-public class Group {
+public class GroupMember {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String description;
 
-
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "groupMember", cascade = CascadeType.ALL)
+    @JsonBackReference
     private Collection<User> users;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -29,10 +27,10 @@ public class Group {
 
     private Collection<Role> roles;
 
-    public Group() {
+    public GroupMember() {
     }
 
-    public Group(int id, String name, String description, Collection<User> users, Collection<Role> roles) {
+    public GroupMember(int id, String name, String description, Collection<User> users, Collection<Role> roles) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -74,13 +72,6 @@ public class Group {
         this.roles = roles;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Group group = (Group) o;
-        return id == group.id && Objects.equals(name, group.name) && Objects.equals(description, group.description) && Objects.equals(users, group.users) && Objects.equals(roles, group.roles);
-    }
 
     public Collection<User> getUsers() {
         return users;
@@ -90,20 +81,6 @@ public class Group {
         this.users = users;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, users, roles);
-    }
 
-    @Override
-    public String toString() {
-        return "Group{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", users=" + users +
-                ", roles=" + roles +
-                '}';
-    }
 }
 

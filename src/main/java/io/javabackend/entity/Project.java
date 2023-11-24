@@ -1,5 +1,6 @@
 package io.javabackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -8,29 +9,21 @@ import java.util.Objects;
 @Entity
 public class Project {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String description;
-        private String startDate;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "project_user",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    private String startDate;
 
-    private Collection<User> users;
 
     public Project() {
     }
 
-    public Project(int id, String name, String description, String startDate, Collection<User> users) {
+    public Project(int id, String name, String description, String startDate) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
-        this.users = users;
     }
 
     public int getId() {
@@ -65,35 +58,5 @@ public class Project {
         this.startDate = startDate;
     }
 
-    public Collection<User> getUsers() {
-        return users;
-    }
 
-    public void setUsers(Collection<User> users) {
-        this.users = users;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Project project = (Project) o;
-        return id == project.id && Objects.equals(name, project.name) && Objects.equals(description, project.description) && Objects.equals(startDate, project.startDate) && Objects.equals(users, project.users);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, startDate, users);
-    }
-
-    @Override
-    public String toString() {
-        return "Project{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", startDate='" + startDate + '\'' +
-                ", users=" + users +
-                '}';
-    }
 }

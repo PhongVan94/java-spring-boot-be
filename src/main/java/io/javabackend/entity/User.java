@@ -1,16 +1,16 @@
 package io.javabackend.entity;
 
+import com.fasterxml.jackson.annotation.JacksonInject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
 
 @Entity
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String email;
     private String password;
@@ -20,7 +20,10 @@ public class User {
     private String gender;
 
     @ManyToOne
-    private Group group;
+    @JoinColumn(name = "group_id")
+    @JsonManagedReference
+    private GroupMember groupMember;
+
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
@@ -34,7 +37,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String email, String password, String username, String address, String phone, String gender, Group group, Collection<Project> projects) {
+    public User(int id, String email, String password, String username, String address, String phone, String gender, GroupMember groupMember, Collection<Project> projects) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -42,16 +45,16 @@ public class User {
         this.address = address;
         this.phone = phone;
         this.gender = gender;
-        this.group = group;
+        this.groupMember = groupMember;
         this.projects = projects;
     }
 
-    public Group getGroup() {
-        return group;
+    public GroupMember getGroup() {
+        return groupMember;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void setGroup(GroupMember groupMember) {
+        this.groupMember = groupMember;
     }
 
     public int getId() {
@@ -120,31 +123,4 @@ public class User {
         this.projects = projects;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(username, user.username) && Objects.equals(address, user.address) && Objects.equals(phone, user.phone) && Objects.equals(gender, user.gender) && Objects.equals(group, user.group) && Objects.equals(projects, user.projects);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, password, username, address, phone, gender, group, projects);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", username='" + username + '\'' +
-                ", address='" + address + '\'' +
-                ", phone='" + phone + '\'' +
-                ", gender='" + gender + '\'' +
-                ", group=" + group +
-                ", projects=" + projects +
-                '}';
-    }
 }
