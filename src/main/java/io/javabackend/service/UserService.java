@@ -17,4 +17,7 @@ public interface UserService {
 
     User getUserById(int id);
 
+    //advance
+    List<User>  getUserWithPagination(int page, int limit);
+
 }

@@ -123,4 +123,18 @@ public class User {
         this.projects = projects;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", gender='" + gender + '\'' +
+                ", groupMember=" + groupMember +
+                ", projects=" + projects +
+                '}';
+    }
 }
