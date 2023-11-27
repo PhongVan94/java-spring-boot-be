@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JacksonInject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 public class User {
@@ -47,14 +50,6 @@ public class User {
         this.gender = gender;
         this.groupMember = groupMember;
         this.projects = projects;
-    }
-
-    public GroupMember getGroup() {
-        return groupMember;
-    }
-
-    public void setGroup(GroupMember groupMember) {
-        this.groupMember = groupMember;
     }
 
     public int getId() {
@@ -113,14 +108,21 @@ public class User {
         this.gender = gender;
     }
 
-
-
     public Collection<Project> getProjects() {
         return projects;
     }
 
     public void setProjects(Collection<Project> projects) {
         this.projects = projects;
+    }
+
+
+    public GroupMember getGroupMember() {
+        return groupMember;
+    }
+
+    public void setGroupMember(GroupMember groupMember) {
+        this.groupMember = groupMember;
     }
 
     @Override
@@ -137,4 +139,16 @@ public class User {
                 ", projects=" + projects +
                 '}';
     }
+
+    public String[] getUrlRole() {
+        Collection<Role> roles = this.getGroupMember().getRoles();
+        List<String> urls = new ArrayList<>();
+
+        for (Role role : roles) {
+            urls.add(role.getUrl());
+        }
+
+        return urls.toArray(new String[0]);
+    }
+
 }

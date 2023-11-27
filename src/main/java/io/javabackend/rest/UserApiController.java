@@ -44,10 +44,10 @@ public class UserApiController {
                 response.put("DT", data);
                 response.put("status", 200);
             } else {
-                response.put("EC", 0);
+                response.put("EC", -1);
                 response.put("EM", "NOT FOUND ANY USER");
                 response.put("DT", null);
-                response.put("status", 200);
+                response.put("status", 404);
             }
         } catch (Exception e) {
             response.put("EC", -1);
