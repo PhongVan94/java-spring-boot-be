@@ -1,6 +1,8 @@
 package io.javabackend.rest;
 
+import io.javabackend.entity.GroupMember;
 import io.javabackend.entity.User;
+import io.javabackend.service.GroupMemberService;
 import io.javabackend.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,12 @@ import java.util.*;
 @RequestMapping("/api/v1/user")
 public class UserApiController {
     private UserService userService;
+    private GroupMemberService groupMemberService;
 
     @Autowired
-    public UserApiController(UserService userService) {
+    public UserApiController(UserService userService, GroupMemberService groupMemberService) {
         this.userService = userService;
+        this.groupMemberService = groupMemberService;
     }
 
     @GetMapping("/")
@@ -97,5 +101,124 @@ public class UserApiController {
             throw new RuntimeException(e);
         }
         return response;
+    }
+
+    @PostMapping("/create")
+    @Transactional
+    public Map<String, Object> createUser(@RequestBody Map<String, String> data) {
+        String email = data.get("email");
+        String phone = data.get("phone");
+        String username = data.get("username");
+        String password = data.get("password");
+        String address = data.get("address");
+        String gender = data.get("gender");
+        String groupId = data.get("groupId");
+
+        Map<String, Object> responseMap = new HashMap<>();
+        try {
+            if (userService.checkEmailExist(email)) {
+                responseMap.put("EC", -1);
+                responseMap.put("EM", "THE EMAIL IS ALREADY EXIST");
+                responseMap.put("DT", "email");
+                responseMap.put("status", 400);
+                return responseMap;
+
+            }
+            if (userService.checkPhoneExist(phone)) {
+                responseMap.put("EC", -1);
+                responseMap.put("EM", "THE PHONE NUMBER IS ALREADY EXIST");
+                responseMap.put("DT", "phone");
+                responseMap.put("status", 400);
+                return responseMap;
+            }
+            String hashPassword = userService.hashUserPassword(password);
+            User user = new User();
+            user.setEmail(email);
+            user.setPhone(phone);
+            user.setUsername(username);
+            user.setPassword(hashPassword);
+            user.setGender(gender);
+            user.setAddress(address);
+            GroupMember group = groupMemberService.getGroupMemberById(Integer.parseInt(groupId));
+            if (group != null) {
+                user.setGroupMember(group);
+                userService.addUser(user);
+                responseMap.put("EC", 0);
+                responseMap.put("EM", "CREATE USER SUCCESS");
+                responseMap.put("DT", null);
+                responseMap.put("status", 200);
+            } else {
+                responseMap.put("EC", -1);
+                responseMap.put("EM", "NOT FOUND GROUP");
+                responseMap.put("DT", null);
+                responseMap.put("status", 404);
+            }
+
+
+        } catch (Exception e) {
+            responseMap.put("EC", -1);
+            responseMap.put("EM", "SOMETHING WENT WRONG IN SERVER");
+            responseMap.put("DT", null);
+            responseMap.put("status", 500);
+
+            throw new RuntimeException(e);
+        }
+        return responseMap;
+
+    }
+
+    @PutMapping("/update")
+    @Transactional
+    public Map<String, Object> updateUser(@RequestBody Map<String, Object> data) {
+        String id = data.get("id").toString();
+        String username = data.get("username").toString();
+        String address = data.get("address").toString();
+        String gender = data.get("gender").toString();
+        String groupId = data.get("groupId").toString();
+        Map<String, Object> responseMap = new HashMap<>();
+        try {
+            User user = userService.getUserById(Integer.parseInt(id));
+
+            System.out.println("check");
+
+            if (user != null) {
+                user.setUsername(username);
+                GroupMember group = groupMemberService.getGroupMemberById(Integer.parseInt(groupId));
+
+                System.out.println("check");
+
+                if (group != null) {
+
+                    user.setGroupMember(group);
+                    user.setGender(gender);
+                    user.setAddress(address);
+                    userService.updateUser(user);
+                    responseMap.put("EC", 0);
+                    responseMap.put("EM", "UPDATE USER SUCCESS");
+                    responseMap.put("DT", null);
+                    responseMap.put("status", 200);
+                } else {
+                    responseMap.put("EC", -1);
+                    responseMap.put("EM", "NOT FOUND GROUP");
+                    responseMap.put("DT", null);
+                    responseMap.put("status", 404);
+                }
+
+            } else {
+                responseMap.put("EC", -1);
+                responseMap.put("EM", "NOT FOUND USER");
+                responseMap.put("DT", null);
+                responseMap.put("status", 404);
+            }
+        } catch (Exception e) {
+            responseMap.put("EC", -1);
+            responseMap.put("EM", "SOMETHING WENT WRONG IN SERVER");
+            responseMap.put("DT", null);
+            responseMap.put("status", 500);
+
+            throw new RuntimeException(e);
+        }
+        return responseMap;
+
     }
 }

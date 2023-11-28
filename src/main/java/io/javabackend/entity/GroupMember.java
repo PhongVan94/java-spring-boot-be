@@ -14,6 +14,7 @@ public class GroupMember {
     private String name;
     private String description;
 
+
     @OneToMany(mappedBy = "groupMember", cascade = CascadeType.ALL)
     @JsonBackReference
     private Collection<User> users;
@@ -80,7 +81,6 @@ public class GroupMember {
     public void setUsers(Collection<User> users) {
         this.users = users;
     }
-
 
 }
 

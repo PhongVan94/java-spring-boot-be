@@ -1,11 +1,13 @@
 package io.javabackend.rest;
 
+import io.javabackend.entity.GroupMember;
 import io.javabackend.entity.Role;
 import io.javabackend.entity.User;
 //import io.javabackend.jwt.filter.JwtAuthFilter;
 import io.javabackend.jwt.service.JwtService;
 import io.javabackend.service.UserService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.session.DefaultCookieSerializerCustomizer;
@@ -117,6 +119,8 @@ public class HomeApiController {
             user.setPhone(phone);
             user.setUsername(username);
             user.setPassword(hashPassword);
+            user.setGender("Other");
+            userService.setGroupDefault(user);
             userService.addUser(user);
 
             responseMap.put("EC", 0);
@@ -135,5 +139,35 @@ public class HomeApiController {
         }
         return responseMap;
     }
+
+    @PostMapping("/logout")
+    public Map<String, Object> handleLogout(
+            HttpServletResponse response) {
+
+        Map<String, Object> responseMap = new HashMap<>();
+        String cookieName = null;
+        try {
+            //clear cookie
+            cookieName = "jwt";
+            Cookie removalCookie = new Cookie(cookieName, null);
+            removalCookie.setMaxAge(0);
+            removalCookie.setPath("/");
+            response.addCookie(removalCookie);
+
+            responseMap.put("EC", 0);
+            responseMap.put("EM", "CLEAR COOKIE SUCCESS");
+            responseMap.put("DT", null);
+            responseMap.put("status", 200);
+        } catch (Exception e) {
+
+            responseMap.put("EC", -1);
+            responseMap.put("EM", "SOMETHING WENT WRONG IN SERVER");
+            responseMap.put("DT", null);
+            responseMap.put("status", 500);
+            throw new RuntimeException(e);
+        }
+        return responseMap;
+    }
+
 
 }

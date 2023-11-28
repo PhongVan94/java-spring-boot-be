@@ -11,5 +11,5 @@ import java.util.List;
 
 @Repository
 public interface GroupMemberRepository extends JpaRepository<GroupMember,Integer> {
-
+GroupMember findByName(String name);
 }

@@ -119,6 +119,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void setGroupDefault(User user) {
+        GroupMember groupMemberDefault = groupMemberRepository.findByName("GUEST");
+        if (groupMemberDefault == null){
+            groupMemberDefault = new GroupMember(0,"GUEST","FOR GUEST",null,null);
+            groupMemberRepository.save(groupMemberDefault);
+        }
+        user.setGroupMember(groupMemberDefault);
+    }
+
+    @Override
     public boolean checkEmailExist(String email) {
         User user = userRepository.findUserByEmail(email);
         return user != null;

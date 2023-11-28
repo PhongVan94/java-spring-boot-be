@@ -38,4 +38,5 @@ public interface UserService {
 
     boolean checkPassPassword(String inputPassword, String hashPassword);
 
+    void setGroupDefault (User user);
 }
