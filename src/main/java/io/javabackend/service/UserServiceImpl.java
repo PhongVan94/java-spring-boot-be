@@ -1,18 +1,14 @@
 package io.javabackend.service;
 
-import io.javabackend.dao.GroupMemberRepository;
+import io.javabackend.dao.GroupRepository;
 import io.javabackend.dao.UserRepository;
-import io.javabackend.entity.GroupMember;
-import io.javabackend.entity.Role;
+import io.javabackend.entity.Group;
 import io.javabackend.entity.User;
 import io.javabackend.jwt.config.SecurityConfig;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.relational.core.sql.SelectBuilder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,15 +18,15 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
-    private GroupMemberRepository groupMemberRepository;
+    private GroupRepository groupRepository;
 
     private SecurityConfig securityConfig;
 
     @Autowired
 
-    public UserServiceImpl(UserRepository userRepository, GroupMemberRepository groupMemberRepository, SecurityConfig securityConfig) {
+    public UserServiceImpl(UserRepository userRepository, GroupRepository groupRepository, SecurityConfig securityConfig) {
         this.userRepository = userRepository;
-        this.groupMemberRepository = groupMemberRepository;
+        this.groupRepository = groupRepository;
         this.securityConfig = securityConfig;
     }
 
@@ -120,10 +116,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void setGroupDefault(User user) {
-        GroupMember groupMemberDefault = groupMemberRepository.findByName("GUEST");
+        Group groupMemberDefault = groupRepository.findByName("GUEST");
         if (groupMemberDefault == null){
-            groupMemberDefault = new GroupMember(0,"GUEST","FOR GUEST",null,null);
-            groupMemberRepository.save(groupMemberDefault);
+            groupMemberDefault = new Group(0,"GUEST","FOR GUEST",null,null);
+            groupRepository.save(groupMemberDefault);
         }
         user.setGroupMember(groupMemberDefault);
     }

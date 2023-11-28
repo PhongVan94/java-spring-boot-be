@@ -1,13 +1,13 @@
 package io.javabackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Collection;
 
 @Entity
-public class GroupMember {
+@Table(name = "`group`")
+public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -15,7 +15,7 @@ public class GroupMember {
     private String description;
 
 
-    @OneToMany(mappedBy = "groupMember", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     @JsonBackReference
     private Collection<User> users;
 
@@ -28,10 +28,10 @@ public class GroupMember {
 
     private Collection<Role> roles;
 
-    public GroupMember() {
+    public Group() {
     }
 
-    public GroupMember(int id, String name, String description, Collection<User> users, Collection<Role> roles) {
+    public Group(int id, String name, String description, Collection<User> users, Collection<Role> roles) {
         this.id = id;
         this.name = name;
         this.description = description;

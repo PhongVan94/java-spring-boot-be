@@ -1,6 +1,6 @@
 package io.javabackend.service;
 
-import io.javabackend.entity.GroupMember;
+import io.javabackend.entity.Group;
 import io.javabackend.entity.Role;
 import io.javabackend.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;

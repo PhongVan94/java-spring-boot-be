@@ -25,7 +25,7 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "group_id")
     @JsonManagedReference
-    private GroupMember groupMember;
+    private Group group;
 
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -40,7 +40,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String email, String password, String username, String address, String phone, String gender, GroupMember groupMember, Collection<Project> projects) {
+    public User(int id, String email, String password, String username, String address, String phone, String gender, Group group, Collection<Project> projects) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -48,7 +48,7 @@ public class User {
         this.address = address;
         this.phone = phone;
         this.gender = gender;
-        this.groupMember = groupMember;
+        this.group = group;
         this.projects = projects;
     }
 
@@ -117,12 +117,12 @@ public class User {
     }
 
 
-    public GroupMember getGroupMember() {
-        return groupMember;
+    public Group getGroupMember() {
+        return group;
     }
 
-    public void setGroupMember(GroupMember groupMember) {
-        this.groupMember = groupMember;
+    public void setGroupMember(Group group) {
+        this.group = group;
     }
 
     @Override
@@ -135,7 +135,7 @@ public class User {
                 ", address='" + address + '\'' +
                 ", phone='" + phone + '\'' +
                 ", gender='" + gender + '\'' +
-                ", groupMember=" + groupMember +
+                ", group=" + group +
                 ", projects=" + projects +
                 '}';
     }

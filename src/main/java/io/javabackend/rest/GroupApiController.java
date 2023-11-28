@@ -1,12 +1,10 @@
 package io.javabackend.rest;
 
-import io.javabackend.entity.GroupMember;
-import io.javabackend.entity.User;
-import io.javabackend.service.GroupMemberService;
+import io.javabackend.entity.Group;
+import io.javabackend.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -15,30 +13,26 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/group")
-public class GroupMemberApiController {
+public class GroupApiController {
 
-    private GroupMemberService groupMemberService;
+    private GroupService groupService;
     @Autowired
-    public GroupMemberApiController(GroupMemberService groupMemberService) {
-        this.groupMemberService = groupMemberService;
+    public GroupApiController(GroupService groupService) {
+        this.groupService = groupService;
     }
 
 
     @GetMapping("/read")
     public Map<String, Object> getGroupMemberList() {
         Map<String, Object> response = new HashMap<>();
-        List<GroupMember> groupMembers = null;
+        List<Group> groups = null;
         try {
-            groupMembers = groupMemberService.getGroupMemberList();
-            if (groupMembers != null) {
-
-
-                Map<String, Object> data = new HashMap<>();
-                data.put("groupMembers", groupMembers);
+            groups = groupService.getGroupMemberList();
+            if (groups != null) {
 
                 response.put("EC", 0);
                 response.put("EM", "GET GROUP SUCCESS");
-                response.put("DT", data);
+                response.put("DT", groups);
                 response.put("status", 200);
             } else {
                 response.put("EC", 0);

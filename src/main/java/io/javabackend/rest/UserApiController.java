@@ -1,8 +1,8 @@
 package io.javabackend.rest;
 
-import io.javabackend.entity.GroupMember;
+import io.javabackend.entity.Group;
 import io.javabackend.entity.User;
-import io.javabackend.service.GroupMemberService;
+import io.javabackend.service.GroupService;
 import io.javabackend.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +15,12 @@ import java.util.*;
 @RequestMapping("/api/v1/user")
 public class UserApiController {
     private UserService userService;
-    private GroupMemberService groupMemberService;
+    private GroupService groupService;
 
     @Autowired
-    public UserApiController(UserService userService, GroupMemberService groupMemberService) {
+    public UserApiController(UserService userService, GroupService groupService) {
         this.userService = userService;
-        this.groupMemberService = groupMemberService;
+        this.groupService = groupService;
     }
 
     @GetMapping("/")
@@ -139,7 +139,7 @@ public class UserApiController {
             user.setPassword(hashPassword);
             user.setGender(gender);
             user.setAddress(address);
-            GroupMember group = groupMemberService.getGroupMemberById(Integer.parseInt(groupId));
+            Group group = groupService.getGroupMemberById(Integer.parseInt(groupId));
             if (group != null) {
                 user.setGroupMember(group);
                 userService.addUser(user);
@@ -183,7 +183,7 @@ public class UserApiController {
 
             if (user != null) {
                 user.setUsername(username);
-                GroupMember group = groupMemberService.getGroupMemberById(Integer.parseInt(groupId));
+                Group group = groupService.getGroupMemberById(Integer.parseInt(groupId));
 
                 System.out.println("check");
 

@@ -1,6 +1,6 @@
 package io.javabackend.rest;
 
-import io.javabackend.entity.GroupMember;
+import io.javabackend.entity.Group;
 import io.javabackend.entity.Role;
 import io.javabackend.entity.User;
 //import io.javabackend.jwt.filter.JwtAuthFilter;
